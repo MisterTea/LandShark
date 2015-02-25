@@ -1,6 +1,19 @@
 *.class
 *.log
 
+# Eclipse project files
+.cache
+.classpath
+.gradle
+.project
+.settings
+
+# build/generated directories
+build
+bin
+solid
+gen
+
 # sbt specific
 .cache/
 .history/
