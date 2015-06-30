@@ -1,6 +1,5 @@
 package com.github.mistertea.boardgame.landshark;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import org.mongojack.JacksonDBCollection;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mistertea.boardgame.core.MongoJackService;
 import com.google.common.collect.Lists;
 

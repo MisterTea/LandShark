@@ -1,10 +1,6 @@
 package com.github.mistertea.boardgame.landshark;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map.Entry;
-import java.util.Random;
-
 import org.apache.commons.collections15.CollectionUtils;
 import org.junit.Assert;
 

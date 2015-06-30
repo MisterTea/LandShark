@@ -2,7 +2,6 @@ package org.mongojack;
 
 import java.util.Map;
 
-import org.bson.types.ObjectId;
 import org.mongojack.JacksonDBCollection;
 
 import com.fasterxml.jackson.databind.JavaType;

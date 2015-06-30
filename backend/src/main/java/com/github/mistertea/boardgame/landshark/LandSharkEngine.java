@@ -18,7 +18,6 @@ import com.github.mistertea.boardgame.core.B64Utils;
 import com.github.mistertea.boardgame.core.DieRollEngine;
 import com.github.mistertea.boardgame.core.MongoJackService;
 import com.github.mistertea.boardgame.landshark.player.AbstractPlayer;
-import com.github.mistertea.boardgame.landshark.player.ConsolePlayer;
 import com.github.mistertea.boardgame.landshark.player.SimplePlayer;
 
 public class LandSharkEngine extends DieRollEngine {
@@ -439,6 +438,7 @@ public class LandSharkEngine extends DieRollEngine {
     gameCollection.updateById(game._id, game);
   }
 
+  @Override
   protected boolean isGameOver() {
     return query.getActivePlayers(currentState) <= 1;
   }

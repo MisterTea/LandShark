@@ -1,6 +1,5 @@
 package com.github.mistertea.boardgame.landshark.player;
 
-import java.util.HashMap;
 import java.util.Scanner;
 
 import com.github.mistertea.boardgame.landshark.LandsharkCommand;

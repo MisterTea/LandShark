@@ -1,6 +1,5 @@
 package com.github.mistertea.boardgame.landshark.player;
 
-import com.github.mistertea.boardgame.core.B64Utils;
 import com.github.mistertea.boardgame.landshark.LandsharkBox;
 import com.github.mistertea.boardgame.landshark.LandsharkCommand;
 import com.github.mistertea.boardgame.landshark.LandsharkCommandType;

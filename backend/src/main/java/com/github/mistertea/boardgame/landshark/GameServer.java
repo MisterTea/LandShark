@@ -1,7 +1,6 @@
 package com.github.mistertea.boardgame.landshark;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.thrift.TException;
