@@ -1,0 +1,159 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+group = 'com.github.mistertea'
+version = '0.0.1-SNAPSHOT'
+
+description = """LandShark"""
+
+mainClassName = 'com.github.mistertea.boardgame.landshark.LandsharkBoardGenerator'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+eclipse {
+  classpath { downloadSources=true }
+
+  project { name = 'LandShark' }
+}
+
+buildscript {
+  repositories { mavenCentral(); }
+}
+
+task addMongoJackAnnotations(type: Copy) {
+  from 'src/gen/gen-java'
+  into 'src/gen/java'
+  // Use a closure to filter each line
+  filter { String line ->
+      line.replaceAll("public String _id","@org.mongojack.ObjectId public String _id")
+  }
+}
+
+task generateThrift << {
+  new File("src/gen").mkdirs()
+  delete "src/gen/gen-java"
+  ext.thriftFiles = fileTree(dir: 'src/main/resources/thrift').matching { include '**/*.thrift' }
+  for(String thriftFile : ext.thriftFiles) {
+    exec {
+      executable = 'thrift'
+      args = [
+        '--gen',
+        'java',
+        '-o',
+        'src/gen/',
+        thriftFile
+      ]
+    }
+  }
+}
+
+task thriftPython << {
+  new File("src/gen").mkdirs()
+  delete "src/gen/gen_py"
+  ext.thriftFiles = fileTree(dir: 'src/main/resources/thrift').matching { include '**/*.thrift' }
+  for(String thriftFile : ext.thriftFiles) {
+    exec {
+      executable = 'thrift'
+      args = [
+        '--gen',
+        'py:newstyle',
+        '-o',
+        'src/gen/',
+        thriftFile
+      ]
+    }
+  }
+  file("src/gen/gen-py").renameTo(file("src/gen/gen_py"))
+}
+
+compileJava {
+  it.dependsOn generateThrift, addMongoJackAnnotations
+}
+tasks.eclipseProject.dependsOn(generateThrift, addMongoJackAnnotations)
+project.afterEvaluate {
+  project.tasks.generateThrift.execute()
+  project.tasks.addMongoJackAnnotations.execute()
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/gen/java'
+      srcDir 'src/main/java'
+    }
+    resources { srcDir 'src/main/resources' }
+  }
+}
+
+repositories {
+  // Uncomment if you have locally installed packages that should override maven central
+  // mavenLocal()
+  mavenCentral();
+
+  maven { url "http://clojars.org/repo" }
+  maven { url "http://conjars.org/repo" }
+  maven { url "http://repo.akka.io/releases" }
+  maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+ext.cascadingVersion = '2.1.6'
+ext.hadoopVersion = '1.2.0'
+
+dependencies {
+  compile group: 'junit', name: 'junit', version:'4.8.2'
+  compile group: 'junit', name: 'junit-dep', version:'4.8.2'
+  compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.3'
+  compile group: 'org.slf4j', name: 'slf4j-api', version:'1.6.6'
+  compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.6.6'
+  compile group: 'log4j', name: 'log4j', version:'1.2.16'
+  compile group: 'commons-io', name: 'commons-io', version:'2.4'
+  compile group: 'commons-codec', name: 'commons-codec', version:'1.8'
+  compile group: 'org.apache.commons', name: 'commons-math', version:'2.2'
+  compile group: 'net.sourceforge.collections', name: 'collections-generic', version:'4.01'
+  compile group: 'org.apache.thrift', name: 'libthrift', version:'0.9.1'
+  compile group: 'org.jsoup', name: 'jsoup', version:'1.7.2'
+  compile group: 'net.htmlparser.jericho', name: 'jericho-html', version:'3.1'
+  compile group: 'org.apache.avro', name: 'avro', version:'1.7.5'
+  
+  // Guava
+  compile 'com.google.guava:guava:18.0'
+
+  // Joda Time
+  compile 'joda-time:joda-time:2.3'
+
+  // Jackson
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+  compile 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+  compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
+
+  // MongoJack
+  compile 'org.mongojack:mongojack:2.3.0'
+}
+
+task copyJars(type: Copy) {
+  into "out/deps"
+  from configurations.runtime
+}
+
+libsDirName = "../out/lib";
+
+task solid(type:Jar) {
+  // Build jar with dependencies
+  from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+    exclude "META-INF/license"
+    exclude "META-INF/LICENSE"
+  }
+  baseName = 'LandsharkSolid'
+  destinationDir = new File("solid")
+  zip64 = true
+  with jar
+}
+
+// Copy jar dependencies
+jar { it.dependsOn copyJars }
