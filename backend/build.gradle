@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'application'
@@ -21,15 +22,16 @@ eclipse {
 
 buildscript {
   repositories { mavenCentral(); }
+  dependencies { classpath 'com.github.iamsteveholmes:scrooge-gradle-plugin:0.5' }
 }
 
-task addMongoJackAnnotations(type: Copy) {
-  from 'src/gen/gen-java'
-  into 'src/gen/java'
-  // Use a closure to filter each line
-  filter { String line ->
-      line.replaceAll("public String _id","@org.mongojack.ObjectId public String _id")
-  }
+apply plugin: 'scrooge-gradle-plugin'
+
+compileScrooge {
+  delete "src/gen/scala"
+  thriftFiles = fileTree(dir: "src/main/resources/thrift", include: "**/*.thrift")
+  dest = file("src/gen/scala")
+  opts = ["--finagle"]
 }
 
 task generateThrift << {
@@ -69,21 +71,28 @@ task thriftPython << {
   file("src/gen/gen-py").renameTo(file("src/gen/gen_py"))
 }
 
-compileJava {
-  it.dependsOn generateThrift, addMongoJackAnnotations
+compileScala {
+  it.dependsOn compileScrooge
 }
-tasks.eclipseProject.dependsOn(generateThrift, addMongoJackAnnotations)
+compileJava {
+  it.dependsOn generateThrift
+}
+tasks.eclipseProject.dependsOn(generateThrift, compileScrooge)
 project.afterEvaluate {
   project.tasks.generateThrift.execute()
-  project.tasks.addMongoJackAnnotations.execute()
+  project.tasks.compileScrooge.execute()
 }
 
 sourceSets {
   main {
     java {
-      srcDir 'src/gen/java'
+      srcDir 'src/gen/gen-java'
       srcDir 'src/main/java'
     }
+	scala {
+		//srcDir 'src/gen/scala'
+		srcDir 'src/main/scala'
+	}
     resources { srcDir 'src/main/resources' }
   }
 }
@@ -98,9 +107,6 @@ repositories {
   maven { url "http://repo.akka.io/releases" }
   maven { url "http://repo.maven.apache.org/maven2" }
 }
-
-ext.cascadingVersion = '2.1.6'
-ext.hadoopVersion = '1.2.0'
 
 dependencies {
   compile group: 'junit', name: 'junit', version:'4.8.2'
@@ -131,6 +137,21 @@ dependencies {
 
   // MongoJack
   compile 'org.mongojack:mongojack:2.3.0'
+
+  // Scala compiler + related tools, and standard library
+  compile 'org.scala-lang:scala-library:2.10.3'
+
+  // Twitter utils (needed for Scrooge and Finagle)
+  compile 'com.twitter:util-core_2.10:6.12.1'
+  
+  // Scrooge
+  compile 'com.twitter:scrooge-core_2.10:3.12.2'
+  compile 'com.twitter:scrooge-runtime_2.10:3.12.2'
+  
+  // Finagle (RPC Framework)
+  compile 'com.twitter:finagle-core_2.10:6.12.2'
+  compile 'com.twitter:finagle-thrift_2.10:6.12.2'
+  
 }
 
 task copyJars(type: Copy) {
@@ -154,6 +175,9 @@ task solid(type:Jar) {
   zip64 = true
   with jar
 }
+
+// Speed up scala compiling by using zinc
+tasks.withType(ScalaCompile) { scalaCompileOptions.useAnt = false }
 
 // Copy jar dependencies
 jar { it.dependsOn copyJars }

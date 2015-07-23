@@ -62,7 +62,8 @@ struct PropertyGroup {
   1:set<string> memberNames = [],
   2:list<i32> rent = [],
   3:i32 housePrice,
-  4:i32 openingBid
+  4:i32 openingBid,
+  5:string name
 }
 
 struct PlayerState {

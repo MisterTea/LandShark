@@ -19,7 +19,7 @@ import org.mongojack.JacksonDBCollection;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.github.mistertea.boardgame.core.MongoJackService;
+import com.github.mistertea.thriftmongojack.ThriftMongoJackService;
 import com.google.common.collect.Lists;
 
 public class LandsharkBoardGenerator {
@@ -76,7 +76,7 @@ public class LandsharkBoardGenerator {
     board.write(prot);
     trans.close();
     
-    MongoJackService dbService = MongoJackService.instance();
+    ThriftMongoJackService dbService = ThriftMongoJackService.instance();
     JacksonDBCollection<LandsharkBox, String> boxCollection = dbService.getCollection(LandsharkBox.class);
     board = boxCollection.insert(board).getSavedObject();
     System.out.println(board._id);
@@ -153,7 +153,7 @@ public class LandsharkBoardGenerator {
 
     Assert.assertFalse(board.propertyGroups.containsKey(group));
     board.propertyGroups.put(group,
-        new PropertyGroup().setOpeningBid(openingBid).setHousePrice(housePrice).setRent(rents));
+        new PropertyGroup().setName(group).setOpeningBid(openingBid).setHousePrice(housePrice).setRent(rents));
     for (String name : names) {
       Action action = new Action(name, type);
       Property property = new Property(name, group);
