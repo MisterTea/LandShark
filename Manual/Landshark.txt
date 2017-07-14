@@ -1,0 +1,90 @@
+Welcome to Landshark!  In this 2-6 player card game, you play as a resort mogul, visiting and auctioning resorts around the world.  The goal is to bankrupt other players by buying and upgrading resorts, then charging others to visit these resorts. 
+
+##  Game Contents
+
+* 18 resort deed cards, denoted by the word DEED on the back
+* 18 resort visit cards
+* 3 Anti-Trust cards
+* 12 upgrade cards
+* Paper money
+
+# Rules
+
+The following section explains the rules of Landshark.
+
+##  Set Up
+
+Based on the number of players, remove some resort cards from both the deed and action decks:
+
+* For 2 players, pick four colors and remove all but these colored cards from the action, deed, and upgrade decks.
+* For 3 players, pick six colors.
+* For 4-6 players, use all eight colors.
+
+To begin a game, separate the cards into three decks:
+
+* The deed deck containing all of the deed cards
+* The upgrade deck containing all of the upgrade cards
+* The action deck containing the visit and Anti-Trust cards
+
+Next, give each player 150 dollars from the bank and re-shuffle the action deck. 
+
+##  Starting the game
+
+To decide who starts, pick one deed card for each player. Shuffle these cards and give one to each player. The players with the first deed card alphabetically will go first. After deciding who goes first, return all deed cards to the deed deck. 
+
+##  Playing a turn
+
+The first player will draw a card from the shuffled action deck. The card will either be a resort or an Anti-Trust card.
+
+### Resort cards
+Each resort in Landshark is represented by two cards: a visit card and a deed card. The resorts are grouped into colors. For example, TODO1, TODO2, and TODO3 are all in the TODO color, denoted by the TODO colored border.  Each deed card displays some information:
+
+1. The starting auction price.
+2. The base rent
+3. The upgrade cost
+
+If a player owns all three resorts of the same color, the player owns the group of resorts. If the player only owns one or two of the resorts for a particular color, those resorts are called orphan resorts. 
+
+If a player draws a resort visit card on their turn, what happens depends on the owner of the corresponding deed card:
+
+* If the player herself owns the deed card, then she is visiting her own resort and nothing happens this turn
+* If another player owns the deed card, then the current player is visiting that player's resort and must pay rent.
+* If no one owns the deed card, the resort is auctioned. 
+
+###  Anti-Trust cards
+
+If a player draws an Anti-Trust card, the following actions take place in order:
+
+1. The player who owns the most resorts *must* auction one of her orphaned resorts. If she has no orphaned resorts, then the player with the second-most resorts must auction, and so on. If all players do not own any orphan resorts, then the anti-trust auction is skipped.  If there is a tie for the number of resorts, the player whose turn is closest to the current player performs the auction. If the current player is part of the tie, she performs the auction. 
+2. After the auction, all players collect 20 dollars from the bank.
+3. All cards in the action deck are shuffled together and placed in the draw pile. 
+
+After the player has finished drawing an action card and taking the appropriate action, she may optionally perform upgrades. 
+
+### Upgrading Resorts
+
+If a player owns a group of resorts (three resorts of the same color), she may upgrade them for a fee. The upgrade fee is listed on the deed card of each resort, and it the same for all resorts of the same color. A single upgrade affects the rents from all three resorts simultaneously. The player pays the bank the price listed on *one* of the resort cards, and then takes an upgrade card of the same color from the bank.
+
+After the player has (optionally) upgraded any groups of resorts, her turn is over and play continues in a clockwise pattern.
+
+### Paying rent
+
+If a player draws a resort visit card that is owned by another player, then the first player owes rent to the second. The amount owed is the following:
+
+* If the resort is an orphan (the second player does not own all three resorts of the same color), then the base rent listed on the card is owed. 
+* If the resort is part of a group (the second player owns all three resorts of the same color), but there are no upgrades, then the rent is twice the base rent
+* For every upgrade, the multiplier increases by one. So for one upgrade, the first player owes three times base rent. For two upgrades, four times base rent is owed, etc..
+
+If the first player does not have enough money to pay rent, the first player is eliminated from the game. All money is returned to the bank, and cards owned by the first player become unowned and available for purchase. Any upgrade cards are returned and available for purchase again in the future. The second player collects the full rent from the bank.
+
+###  Auctioning
+
+If a player visits an un-owned resort or owned the most resorts when an anti-trust card is drawn, an auction begins.
+
+In the case of anti-trust auctions, the winner of the auction pays the player that previously owned the resort. The player who is auctioning can not bid in her own auction.
+
+If no one bids the minimum amount listed on the deed card, then the auction is cancelled and there is no effect. 
+
+### Winning
+
+The last player remaining is the winner. 
